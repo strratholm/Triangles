@@ -37,6 +37,15 @@ public:
         return res;
     }
 
+    Vector3 projectionTo(const Vector3 &other) const{
+        double product = Vector3::scalarProduct(*this, other);
+        return Vector3(other*(product/pow(other.getMagnitude(), 2)));
+    }
+
+    Vector3 normalize() const {
+        return (*this)*(1./getMagnitude());
+    }
+
     Vector3 operator-() const {
         return Vector3(-x,-y,-z);
     }
@@ -47,6 +56,14 @@ public:
 
     Vector3 operator-(const Vector3 &other) const {
         return Vector3(x - other.x, y - other.y, z - other.z);
+    }
+
+    Vector3 operator*(double a) const {
+        return Vector3(x*a, y*a, z*a);
+    }
+
+    static double cosBetween(const Vector3 &vect1, const Vector3 &vect2) {
+         return Vector3::scalarProduct(vect1, vect2)/(vect1.getMagnitude()*vect2.getMagnitude());
     }
 
     static Vector3 crossProduct(const Vector3 &vect1, const Vector3 &vect2) {
@@ -120,8 +137,14 @@ public:
         return false;
     }
 
-    int getIntersection(const Line &other_line, Vector3 &res) {
-        //fill this
+    static Vector3 getIntersection(const Line &line1, const Line &line2) {
+        Vector3 dif_to_line1 = (line2.base_point - line1.base_point).projectionTo(line1.dir_vector);
+        Vector3 altitude = line2.base_point - line1.base_point - dif_to_line1;
+
+        Vector3 from_base2_to_inter = line2.dir_vector.normalize()*
+                (altitude.getMagnitude()/Vector3::cosBetween(altitude, line2.dir_vector));
+        
+        return line2.base_point - from_base2_to_inter;
     }
 };
 
