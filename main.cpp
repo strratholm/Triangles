@@ -181,15 +181,37 @@ public:
     }
 };
 
+int getMiddleIndex(const vector<Vector3> &vects) {
+    if (vects.size() != 3)
+        return -1;
+
+    for (int i = 0; i < 3; ++i) {
+        Vector3 temp_vect1 = vects[i] - vects[(i+1)%3];
+        Vector3 temp_vect2 = vects[i] - vects[(i+2)%3];
+        if (Vector3::scalarProduct(temp_vect1, temp_vect2) < 0)
+            return i;
+    }
+
+    return -1;
+}
 
 vector<Vector3> lineIntersectsTriangle(const vector<Vector3> &triangle, const Line &line) {
-    vector<Vector3> res = vector<Vector3>();
+    vector<Vector3> intersection_points = vector<Vector3>();
     for (int i = 0; i < 3; ++i) {
         Line tr_line = Line(Vector3(triangle[i] - triangle[(i+1)%3]), triangle[i]);
         if (!Line::isParallel(tr_line, line)) {
-            res.push_back(Line::getIntersection(line, line));
+            intersection_points.push_back(Line::getIntersection(tr_line, line));
         }
     }
+
+    if (intersection_points.size() == 3) {
+        int middle_index = getMiddleIndex(intersection_points);
+        Vector3 temp_vect = intersection_points[middle_index];
+        intersection_points.erase(intersection_points.begin() + middle_index);
+        intersection_points.insert(intersection_points.begin() + 1, temp_vect);
+    }
+
+    return vector<Vector3>(intersection_points);
 }
 
 bool isSegmentsIntersect(vector<Vector3> segment1, vector<Vector3> segment2) {
