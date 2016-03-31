@@ -116,7 +116,7 @@ public:
     Vector3 base_point;
 
     Line(const Plane &pl1, const Plane &pl2) {
-
+        //???????????????????????????????????????????????????????????????????????????????
     }
 
     Line(const Vector3 &vect, const Vector3 &point) {
@@ -143,7 +143,7 @@ public:
 
         Vector3 from_base2_to_inter = line2.dir_vector.normalize()*
                 (altitude.getMagnitude()/Vector3::cosBetween(altitude, line2.dir_vector));
-        
+
         return line2.base_point - from_base2_to_inter;
     }
 };
@@ -182,8 +182,14 @@ public:
 };
 
 
-void lineIntersectsTriangle(const vector<Vector3> &triangle, const Line &line, vector<Vector3> &Intersection_points) {
-    //fill this
+vector<Vector3> lineIntersectsTriangle(const vector<Vector3> &triangle, const Line &line) {
+    vector<Vector3> res = vector<Vector3>();
+    for (int i = 0; i < 3; ++i) {
+        Line tr_line = Line(Vector3(triangle[i] - triangle[(i+1)%3]), triangle[i]);
+        if (!Line::isParallel(tr_line, line)) {
+            res.push_back(Line::getIntersection(line, line));
+        }
+    }
 }
 
 bool isSegmentsIntersect(vector<Vector3> segment1, vector<Vector3> segment2) {
@@ -206,11 +212,11 @@ bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector
 }
 
 bool isInTriangle(const vector<Vector3> &triangle, const Vector3 &point) {
-    int test = 1;
+    bool test = true;
     for (int i = 0; i < 3; ++i) {
         test &= isSameHalfPlane(Line(Vector3(triangle[i] - triangle[(i+1)%3]), triangle[i]), triangle[(i+2)%3], point);
     }
-    return test != 0;
+    return test;
 }
 
 bool isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) {
@@ -231,10 +237,8 @@ bool isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) 
 
     Line intersection_line = Line(plane1, plane2);
 
-    vector<Vector3> intersection_points1 = vector<Vector3>();
-    lineIntersectsTriangle(triangle1, intersection_line, intersection_points1);
-    vector<Vector3> intersection_points2 = vector<Vector3>();
-    lineIntersectsTriangle(triangle2, intersection_line, intersection_points2);
+    vector<Vector3> intersection_points1 = lineIntersectsTriangle(triangle1, intersection_line;
+    vector<Vector3> intersection_points2 = lineIntersectsTriangle(triangle2, intersection_line);
 
     if (intersection_points1.size() == 0 || intersection_points2.size() == 0)
         return false;
