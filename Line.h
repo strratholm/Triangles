@@ -8,6 +8,7 @@
 
 #include "Vector3.h"
 #include "Plane.h"
+#include "General.h"
 
 class Line {
 public:
@@ -20,6 +21,9 @@ public:
     static bool isParallel(const Line &line1, const Line &line2);
     static bool isSame(const Line &line1, const Line &line2);
     static Vector3 getIntersection(const Line &line1, const Line &line2);
+
+private:
+    void setBasePointCoords(int ind1, int ind2, double val1, double val2);
 };
 
 

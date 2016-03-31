@@ -7,6 +7,7 @@
 
 
 #include "Vector3.h"
+#include "General.h"
 
 class Plane {
 public:
@@ -18,6 +19,7 @@ public:
     double d;
 
     Plane(const Vector3 &point_1, const Vector3 &point_2, const Vector3 &point_3);
+
     static bool isParallel(const Plane &plane1, const Plane &plane2);
     static bool isSame(const Plane &plane1, const Plane &plane2);
 };

@@ -5,7 +5,32 @@
 #include "Line.h"
 
 Line::Line(const Plane &pl1, const Plane &pl2) {
-    //???????????????????????????????????????????????????????????????????????????????
+    dir_vector = Vector3::crossProduct(pl1.normal, pl2.normal);
+
+    int ind1, ind2;
+    if (dir_vector.x != 0) {
+        ind1 = 1; ind2 = 2; base_point.x = 0;
+    } else if (dir_vector.y != 0) {
+        ind1 = 0; ind2 = 2; base_point.y = 0;
+    } else {
+        ind1 = 0; ind2 = 1; base_point.z = 0;
+    }
+
+    double coordpl[2][3] = {{pl1.normal.x, pl1.normal.y, pl1.normal.z}, {pl2.normal.x, pl2.normal.y, pl2.normal.z}};
+
+    double coords[2];
+
+    int jind1, jind2;
+    
+    jind1 = (coordpl[0][ind1] != 0) ? 0 : 1;
+    jind2 = (jind1 + 1) % 2;
+
+    coords[1] = (pl1.d*coordpl[jind2][ind1]/coordpl[jind1][ind1] - pl2.d)/
+            (coordpl[jind2][ind2] - coordpl[jind1][ind2]*coordpl[jind2][ind1]/coordpl[jind1][ind1]);
+
+    coords[0] = (-pl1.d - coordpl[jind1][ind2])/coordpl[jind1][ind1];
+
+    setBasePointCoords(ind1, ind2, coords[0], coords[1]);
 }
 
 Line::Line(const Vector3 &vect, const Vector3 &point) {
@@ -34,4 +59,34 @@ Vector3 static Line::getIntersection(const Line &line1, const Line &line2) {
                                   (altitude.getMagnitude()/Vector3::cosBetween(altitude, line2.dir_vector));
 
     return line2.base_point - from_base2_to_inter;
+}
+
+void Line::setBasePointCoords(int ind1, int ind2, double val1, double val2) {
+    switch (ind1) {
+        case 0:
+            base_point.x = val1;
+            break;
+        case 1:
+            base_point.y = val1;
+            break;
+        case 2:
+            base_point.z = val1;
+            break;
+        default:
+            return;
+    }
+
+    switch (ind2) {
+        case 0:
+            base_point.x = val2;
+            break;
+        case 1:
+            base_point.y = val2;
+            break;
+        case 2:
+            base_point.z = val2;
+            break;
+        default:
+            return;
+    }
 }

@@ -5,13 +5,11 @@
 #ifndef TRIANGLES_GEOMETRYHELP_H
 #define TRIANGLES_GEOMETRYHELP_H
 
+#include "General.h"
 #include "Line.h"
 #include <vector>
 
-int isWithinError(double x, double y, double xError, double yError) {
-    if ((x - xError <= y + yError) && (x + xError >= y - yError)) return 1;
-    return 0;
-}
+using namespace std;
 
 bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector3 &asked_point);
 bool isInTriangle(const vector<Vector3> &triangle, const Vector3 &point);
