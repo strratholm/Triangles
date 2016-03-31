@@ -196,7 +196,12 @@ bool isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) 
 
     if (Plane::isParallel(plane1, plane2)) {
         if (Plane::isSame(plane1, plane2)) {
-            //fill this
+            bool result = false;
+            for (int i = 0; i < 3; ++i) {
+                result |= isInTriangle(triangle1, triangle2[i]);
+                result |= isInTriangle(triangle2, triangle1[i]);
+            }
+            return result;
         } else
             return false;
     }
