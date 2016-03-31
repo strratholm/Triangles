@@ -5,7 +5,8 @@
 #ifndef TRIANGLES_VECTOR3_H
 #define TRIANGLES_VECTOR3_H
 
-#include "math.h"
+#include <math.h>
+#include "General.h"
 
 class Vector3 {
 public:
