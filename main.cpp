@@ -49,10 +49,10 @@ public:
         return Vector3(x - other.x, y - other.y, z - other.z);
     }
 
-    static void crossProduct(const Vector3 &vect1, const Vector3 &vect2, Vector3 &vect_result) {
-        vect_result.x = vect1.y*vect2.z - vect1.z*vect2.y;
-        vect_result.y = vect1.z*vect2.x - vect1.x*vect2.z;
-        vect_result.z = vect1.x*vect2.y - vect1.y*vect2.x;
+    static Vector3 crossProduct(const Vector3 &vect1, const Vector3 &vect2) {
+        return Vector3(vect1.y*vect2.z - vect1.z*vect2.y,
+                       vect1.z*vect2.x - vect1.x*vect2.z,
+                       vect1.x*vect2.y - vect1.y*vect2.x);
     }
 
     static double scalarProduct(const Vector3 &vect1, const Vector3 &vect2) {
@@ -60,19 +60,19 @@ public:
         return res;
     }
 
-    static int isCollinear(const Vector3 &vect1, const Vector3 &vect2) {
+    static bool isCollinear(const Vector3 &vect1, const Vector3 &vect2) {
         if (isWithinError(vect1.getMagnitude(), 0, eps, 0) || isWithinError(vect2.getMagnitude(), 0, eps, 0))
-            return 1;
+            return true;
 
         if ((isWithinError(vect1.x, 0, eps, 0) && !isWithinError(vect2.x, 0, eps, 0)) ||
                 (isWithinError(vect2.y, 0, eps, 0) && !isWithinError(vect1.x, 0, eps, 0)))
-            return 0;
+            return false;
         if ((isWithinError(vect1.y, 0, eps, 0) && !isWithinError(vect2.y, 0, eps, 0)) ||
                 (isWithinError(vect2.y, 0, eps, 0) && !isWithinError(vect1.y, 0, eps, 0)))
-            return 0;
+            return false;
         if ((isWithinError(vect1.z, 0, eps, 0) && !isWithinError(vect2.z, 0, eps, 0)) ||
                 (isWithinError(vect2.z, 0, eps, 0) && !isWithinError(vect1.z, 0, eps, 0)))
-            return 0;
+            return false;
 
         double alpha[3];
         alpha[0] = vect2.x/vect1.x;
@@ -88,10 +88,7 @@ public:
             }
         }
 
-        if (alphaComparison)
-            return 1;
-        else
-            return 0;
+        return alphaComparison != 0;
     }
 };
 
@@ -110,20 +107,17 @@ public:
         base_point = Vector3(point);
     }
 
-    static int isParallel(const Line &line1, const Line &line2) {
-        if (Vector3::isCollinear(line1.dir_vector, line2.dir_vector))
-            return 1;
-        else
-            return 0;
+    static bool isParallel(const Line &line1, const Line &line2) {
+        return Vector3::isCollinear(line1.dir_vector, line2.dir_vector);
     }
 
-    static int isSame(const Line &line1, const Line &line2) {
+    static bool isSame(const Line &line1, const Line &line2) {
         if (Line::isParallel(line1, line2)) {
             Vector3 temp_vect = Vector3(line1.base_point - line2.base_point);
             if (Vector3::isCollinear(line1.dir_vector, temp_vect))
-                return 1;
-        } else
-            return 0;
+                return true;
+        }
+        return false;
     }
 
     int getIntersection(const Line &other_line, Vector3 &res) {
@@ -144,35 +138,23 @@ public:
 
     Plane(const Vector3 &point_1, const Vector3 &point_2, const Vector3 &point_3):
             p1(Vector3(point_1)), p2(Vector3(point_2)), p3(Vector3(point_3)) {
-        setNormal();
-        setD();
-    }
 
-    static int isParallel(const Plane &plane1, const Plane &plane2) {
-        if (Vector3::isCollinear(plane1.normal, plane2.normal))
-            return 1;
-        else
-            return 0;
-    }
-
-    static int isSame(const Plane &plane1, const Plane &plane2) {
-        if (isParallel(plane1, plane2)) {
-            if (isWithinError(plane1.normal.getMagnitude()/plane2.normal.getMagnitude(), plane1.d/plane2.d, eps, eps))
-                return 1;
-        } else
-            return 0;
-    }
-
-private:
-    void setNormal(){
-        Vector3 temp_vect1 = Vector3(p2 - p1);
-        Vector3 temp_vect2 = Vector3(p3 - p1);
-
-        Vector3::crossProduct(temp_vect1, temp_vect2, normal);
-    }
-
-    void setD() {
+        normal = Vector3::crossProduct(Vector3(p2 - p1),Vector3(p3 - p1));
         d = -1. * Vector3::scalarProduct(p1, normal);
+
+    }
+
+    static bool isParallel(const Plane &plane1, const Plane &plane2) {
+        return Vector3::isCollinear(plane1.normal, plane2.normal);
+    }
+
+    static bool isSame(const Plane &plane1, const Plane &plane2) {
+        if (isParallel(plane1, plane2)) {
+            if (isWithinError(plane1.normal.getMagnitude() / plane2.normal.getMagnitude(), plane1.d / plane2.d, eps,
+                              eps))
+                return true;
+        }
+        return false;
     }
 };
 
@@ -181,42 +163,34 @@ void lineIntersectsTriangle(const vector<Vector3> &triangle, const Line &line, v
     //fill this
 }
 
-int isSegmentsIntersect(vector<Vector3> segment1, vector<Vector3> segment2) {
+bool isSegmentsIntersect(vector<Vector3> segment1, vector<Vector3> segment2) {
     //fill this
 }
 
-int isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector3 &asked_point) {
+bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector3 &asked_point) {
     Vector3 vect_to_sample = Vector3(sample_point - line.base_point);
 
     Vector3 vect_to_asked = Vector3(asked_point - line.base_point);
 
-    Vector3 dir_by_sample = Vector3();
-    Vector3::crossProduct(line.dir_vector, vect_to_sample, dir_by_sample);
-    Vector3 dir_by_asked = Vector3();
-    Vector3::crossProduct(line.dir_vector, vect_to_asked, dir_by_asked);
+    Vector3 dir_by_sample = Vector3::crossProduct(line.dir_vector, vect_to_sample);
+    Vector3 dir_by_asked = Vector3::crossProduct(line.dir_vector, vect_to_asked);
 
     if(!Vector3::isCollinear(dir_by_asked, dir_by_sample))
-        return 0;
+        return false;
 
-    if (Vector3::scalarProduct(dir_by_asked, dir_by_sample) <= 0)
-        return 1;
-    else
-        return 0;
+    return Vector3::scalarProduct(dir_by_asked, dir_by_sample) <= 0;
 
 }
 
-int isInTriangle(const vector<Vector3> &triangle, const Vector3 &point) {
+bool isInTriangle(const vector<Vector3> &triangle, const Vector3 &point) {
     int test = 1;
     for (int i = 0; i < 3; ++i) {
         test &= isSameHalfPlane(Line(Vector3(triangle[i] - triangle[(i+1)%3]), triangle[i]), triangle[(i+2)%3], point);
     }
-    if (test)
-        return 1;
-    else
-        return 0;
+    return test != 0;
 }
 
-int isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) {
+bool isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) {
     Plane plane1 = Plane(triangle1[0], triangle1[1], triangle2[2]);
     Plane plane2 = Plane(triangle2[0], triangle2[1], triangle2[2]);
 
@@ -224,7 +198,7 @@ int isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) {
         if (Plane::isSame(plane1, plane2)) {
             //fill this
         } else
-            return 0;
+            return false;
     }
 
     Line intersection_line = Line(plane1, plane2);
@@ -235,11 +209,7 @@ int isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) {
     lineIntersectsTriangle(triangle2, intersection_line, intersection_points2);
 
     if (intersection_points1.size() == 0 || intersection_points2.size() == 0)
-        return 0;
+        return false;
 
-    if (isSegmentsIntersect(intersection_points1, intersection_points2))
-        return 1;
-    else
-        return 0;
-
+    return isSegmentsIntersect(intersection_points1, intersection_points2);
 }
