@@ -1,17 +1,14 @@
-#include <iostream>
-#include <math.h>
 #include <vector>
 #include <assert.h>
 #include "Vector3.h"
-#include "Line.h"
 #include "GeometryHelp.h"
 
 using namespace std;
 
 class Test {
 private:
-    vector<Vector3> triangle1;
-    vector<Vector3> triangle2;
+    VectorsSet triangle1;
+    VectorsSet triangle2;
 
     void fillTriangle(int number, const Vector3 &v1, const Vector3 &v2, const Vector3 &v3) {
         switch (number) {
@@ -31,8 +28,8 @@ private:
     }
 public:
     Test() {
-        triangle1 = vector<Vector3>(3);
-        triangle2 = vector<Vector3>(3);
+        triangle1 = VectorsSet(3);
+        triangle2 = VectorsSet(3);
     }
 
     bool samePlaneTrue() {
@@ -93,7 +90,6 @@ public:
 };
 
 int main() {
-    cout << "Hello, World!" << endl;
     Test test = Test();
     assert(test.samePlaneTrue());
     assert(test.samePlaneFalse());
