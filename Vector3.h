@@ -27,6 +27,7 @@ public:
     static Vector3 crossProduct(const Vector3 &vect1, const Vector3 &vect2);
     static double scalarProduct(const Vector3 &vect1, const Vector3 &vect2);
     static bool isCollinear(const Vector3 &vect1, const Vector3 &vect2);
+    static bool isSame(const Vector3 &vect1, const Vector3&vect2, double error1, double error2);
 };
 
 

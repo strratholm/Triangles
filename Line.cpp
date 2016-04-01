@@ -53,6 +53,12 @@ bool Line::isSame(const Line &line1, const Line &line2) {
 }
 
 Vector3 Line::getIntersection(const Line &line1, const Line &line2) {
+    if (isWithinError(line1.base_point.x, line2.base_point.x, eps, eps) &&
+                isWithinError(line1.base_point.y, line2.base_point.y, eps, eps) &&
+                isWithinError(line1.base_point.z, line2.base_point.z, eps, eps)) {
+        return Vector3(line1.base_point);
+    }
+
     Vector3 dif_to_line1 = (line2.base_point - line1.base_point).projectionTo(line1.dir_vector);
     Vector3 altitude = line2.base_point - line1.base_point - dif_to_line1;
 

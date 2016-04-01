@@ -48,16 +48,24 @@ bool isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) 
     return isSegmentsIntersect(intersection_points1, intersection_points2);
 }
 
+bool isSecondMiddle(const vector<Vector3> &vects) {
+    bool res = (getMiddleIndex(vects) == 1) ||
+            Vector3::isSame(vects[0], vects[1], eps, eps) ||
+            Vector3::isSame(vects[2], vects[1], eps, eps);
+
+    return res;
+}
+
 bool isSegmentsIntersect(vector<Vector3> segment1, vector<Vector3> segment2) {
     bool res = false;
 
     vector<Vector3> temp_array = vector<Vector3>(3);
     for (int i = 0; i < 2; ++i) {
         temp_array[0] = segment1[0]; temp_array[1] = segment2[i]; temp_array[2] = segment1[1];
-        res |= (getMiddleIndex(temp_array) == 1);
+        res |= isSecondMiddle(temp_array);
 
         temp_array[0] = segment2[0]; temp_array[1] = segment1[i]; temp_array[2] = segment2[1];
-        res |= (getMiddleIndex(temp_array) == 1);
+        res |= isSecondMiddle(temp_array);
     }
 
     return res;

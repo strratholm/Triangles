@@ -94,3 +94,11 @@ bool Vector3::isCollinear(const Vector3 &vect1, const Vector3 &vect2) {
 
     return alphaComparison;
 }
+
+bool Vector3::isSame(const Vector3 &vect1, const Vector3 &vect2, double error1, double error2) {
+    bool res = isWithinError(vect1.z, vect2.z, error1, error2);
+    res &= isWithinError(vect1.x, vect2.x, error1, error2);
+    res &= isWithinError(vect1.y, vect2.y, error1, error2);
+
+    return res;
+}
