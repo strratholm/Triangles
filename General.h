@@ -7,8 +7,11 @@
 
 #include <vector>
 
+
+#define eps 0.0001
+
 using namespace std;
 
-int isWithinError(double x, double y, double xError, double yError);
+bool isWithinError(double x, double y, double xError, double yError);
 
 #endif //TRIANGLES_GENERAL_H

@@ -2,6 +2,8 @@
 // Created by strratholm on 31.03.2016.
 //
 
+#include <assert.h>
+#include <iostream>
 #include "GeometryHelp.h"
 
 bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector3 &asked_point) {
@@ -15,7 +17,8 @@ bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector
     if(!Vector3::isCollinear(dir_by_asked, dir_by_sample))
         return false;
 
-    return Vector3::scalarProduct(dir_by_asked, dir_by_sample) <= 0;
+
+    return Vector3::scalarProduct(dir_by_asked, dir_by_sample) >= 0;
 }
 
 bool isTrianglesIntersect(vector<Vector3> triangle1, vector<Vector3> triangle2) {
@@ -51,12 +54,10 @@ bool isSegmentsIntersect(vector<Vector3> segment1, vector<Vector3> segment2) {
     vector<Vector3> temp_array = vector<Vector3>(3);
     for (int i = 0; i < 2; ++i) {
         temp_array[0] = segment1[0]; temp_array[1] = segment2[i]; temp_array[2] = segment1[1];
-        res |= (getMiddleIndex(temp_array) == 2);
-        temp_array.clear();
+        res |= (getMiddleIndex(temp_array) == 1);
 
         temp_array[0] = segment2[0]; temp_array[1] = segment1[i]; temp_array[2] = segment2[1];
-        res |= (getMiddleIndex(temp_array) == 2);
-        temp_array.clear();
+        res |= (getMiddleIndex(temp_array) == 1);
     }
 
     return res;
@@ -112,21 +113,9 @@ int getMiddleIndex(const vector<Vector3> &vects) {
 bool isInTriangle(const vector<Vector3> &triangle, const Vector3 &point) {
     bool test = true;
     for (int i = 0; i < 3; ++i) {
-        test &= isSameHalfPlane(Line(Vector3(triangle[i] - triangle[(i+1)%3]), triangle[i]), triangle[(i+2)%3], point);
+        test &= isSameHalfPlane(Line(Vector3(triangle[i] - triangle[(i+1)%3]), triangle[i]),
+                                triangle[(i+2)%3], point);
     }
     return test;
 }
 
-bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector3 &asked_point) {
-    Vector3 vect_to_sample = Vector3(sample_point - line.base_point);
-
-    Vector3 vect_to_asked = Vector3(asked_point - line.base_point);
-
-    Vector3 dir_by_sample = Vector3::crossProduct(line.dir_vector, vect_to_sample);
-    Vector3 dir_by_asked = Vector3::crossProduct(line.dir_vector, vect_to_asked);
-
-    if(!Vector3::isCollinear(dir_by_asked, dir_by_sample))
-        return false;
-
-    return Vector3::scalarProduct(dir_by_asked, dir_by_sample) <= 0;
-}

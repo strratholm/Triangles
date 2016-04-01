@@ -4,8 +4,6 @@
 
 #include "General.h"
 
-int isWithinError(double x, double y, double xError, double yError) {
-    if ((x - xError <= y + yError) && (x + xError >= y - yError)) return 1;
-    vector<double> hello;
-    return 0;
+bool isWithinError(double x, double y, double xError, double yError) {
+    return ((x - xError <= y + yError) && (x + xError >= y - yError));
 }
