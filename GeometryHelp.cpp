@@ -5,12 +5,16 @@
 #include "GeometryHelp.h"
 #include "General.h"
 
-typedef vector<Vector3> VectorsSet;
+
 
 bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector3 &asked_point) {
     Vector3 vect_to_sample = Vector3(sample_point - line.base_point);
 
     Vector3 vect_to_asked = Vector3(asked_point - line.base_point);
+
+    //returns true even if point lays on line
+    if (Vector3::isCollinear(vect_to_asked, line.dir_vector))
+        return true;
 
     Vector3 dir_by_sample = Vector3::crossProduct(line.dir_vector, vect_to_sample);
     Vector3 dir_by_asked = Vector3::crossProduct(line.dir_vector, vect_to_asked);
