@@ -1,9 +1,10 @@
 #include <vector>
 #include <assert.h>
-#include "Vector3.h"
-#include "GeometryHelp.h"
+#include "VitalyZ_Vector3.h"
+#include "VitalyZ_GeometryHelp.h"
 
 using namespace std;
+using namespace VitalyZ;
 
 class Test {
 private:
