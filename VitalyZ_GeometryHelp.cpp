@@ -2,10 +2,10 @@
 // Created by strratholm on 31.03.2016.
 //
 
-#include "GeometryHelp.h"
-#include "General.h"
+#include "VitalyZ_GeometryHelp.h"
+#include "VitalyZ_General.h"
 
-
+using namespace VitalyZ;
 
 bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector3 &asked_point) {
     Vector3 vect_to_sample = Vector3(sample_point - line.base_point);
@@ -105,7 +105,8 @@ bool isSegmentsIntersect(VectorsSet segment1, VectorsSet segment2) {
     return res;
 }
 
-bool isTrianglesIntersect(VectorsSet triangle1, VectorsSet triangle2) {
+
+bool VitalyZ::isTrianglesIntersect(VectorsSet triangle1, VectorsSet triangle2) {
     Plane plane1 = Plane(triangle1[0], triangle1[1], triangle2[2]);
     Plane plane2 = Plane(triangle2[0], triangle2[1], triangle2[2]);
 
@@ -130,4 +131,16 @@ bool isTrianglesIntersect(VectorsSet triangle1, VectorsSet triangle2) {
         return false;
 
     return isSegmentsIntersect(intersection_points1, intersection_points2);
+}
+
+bool VitalyZ::isTrianglesIntersect(double triangle1[9], double triangle2[9]) {
+    VectorsSet tr1 = VectorsSet(3);
+    VectorsSet tr2 = VectorsSet(3);
+
+    for (int i = 0; i < 3; ++i) {
+        tr1[i] = Vector3(triangle1[i*3], triangle1[i*3 + 1], triangle1[i*3 + 2]);
+        tr2[i] = Vector3(triangle2[i*3], triangle2[i*3 + 1], triangle2[i*3 + 2]);
+    }
+
+    return isTrianglesIntersect(tr1, tr2);
 }
