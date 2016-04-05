@@ -2,8 +2,10 @@
 // Created by strratholm on 31.03.2016.
 //
 
-#include <assert.h>
-#include "Line.h"
+#include "VitalyZ_Line.h"
+#include "VitalyZ_General.h"
+
+using namespace VitalyZ;
 
 Line::Line(const Plane &pl1, const Plane &pl2) {
     dir_vector = Vector3::crossProduct(pl1.normal, pl2.normal);

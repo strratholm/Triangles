@@ -2,8 +2,11 @@
 // Created by strratholm on 31.03.2016.
 //
 
-#include "Vector3.h"
+#include "VitalyZ_Vector3.h"
+#include "VitalyZ_General.h"
+#include <math.h>
 
+using namespace VitalyZ;
 
 Vector3::Vector3(double xx, double yy, double zz) {
     x = xx;

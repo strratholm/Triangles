@@ -5,13 +5,10 @@
 #ifndef TRIANGLES_GENERAL_H
 #define TRIANGLES_GENERAL_H
 
-#include <vector>
-
-
 #define eps 0.0001
+namespace VitalyZ {
 
-using namespace std;
+    bool isWithinError(double x, double y, double xError, double yError);
 
-bool isWithinError(double x, double y, double xError, double yError);
-
+}
 #endif //TRIANGLES_GENERAL_H

@@ -2,9 +2,10 @@
 // Created by strratholm on 31.03.2016.
 //
 
-#include <iostream>
-#include <assert.h>
-#include "Plane.h"
+#include "VitalyZ_Plane.h"
+#include "VitalyZ_General.h"
+
+using namespace VitalyZ;
 
 Plane::Plane(const Vector3 &point_1, const Vector3 &point_2, const Vector3 &point_3)
         : p1(Vector3(point_1)), p2(Vector3(point_2)), p3(Vector3(point_3)) {
