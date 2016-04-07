@@ -15,7 +15,8 @@ Vector3::Vector3(double xx, double yy, double zz) {
 }
 
 double Vector3::getMagnitude() const {
-    return sqrt(x * x + y * y + z * z);
+    double hyp1 = hypot(x, y);
+    return hypot(hyp1, z);
 }
 
 Vector3 Vector3::projectionTo(const Vector3 &other) const {
@@ -24,7 +25,7 @@ Vector3 Vector3::projectionTo(const Vector3 &other) const {
 }
 
 Vector3 Vector3::normalize() const {
-    return (*this)*(1./getMagnitude());
+    return Vector3(x / getMagnitude(), y / getMagnitude(), z / getMagnitude());
 }
 
 Vector3 Vector3::operator-() const {
@@ -61,41 +62,20 @@ bool Vector3::isCollinear(const Vector3 &vect1, const Vector3 &vect2) {
     if (isWithinError(vect1.getMagnitude(), 0, eps, 0) || isWithinError(vect2.getMagnitude(), 0, eps, 0))
         return true;
 
-    if ((isWithinError(vect1.x, 0, eps, 0) && !isWithinError(vect2.x, 0, eps, 0)) ||
-        (isWithinError(vect2.x, 0, eps, 0) && !isWithinError(vect1.x, 0, eps, 0)))
-        return false;
-    if ((isWithinError(vect1.y, 0, eps, 0) && !isWithinError(vect2.y, 0, eps, 0)) ||
-        (isWithinError(vect2.y, 0, eps, 0) && !isWithinError(vect1.y, 0, eps, 0)))
-        return false;
-    if ((isWithinError(vect1.z, 0, eps, 0) && !isWithinError(vect2.z, 0, eps, 0)) ||
-        (isWithinError(vect2.z, 0, eps, 0) && !isWithinError(vect1.z, 0, eps, 0)))
-        return false;
+    Vector3 vect1Norm = vect1.normalize();
+    Vector3 vect2Norm = vect2.normalize();
 
-    double alpha[3] = {false, false, false};
-    bool doAlpha[3] = {0, 0, 0};
-    if (vect1.x != 0) {
-        alpha[0] = vect2.x/vect1.x;
-        doAlpha[0] = true;
-    }
-    if (vect1.y != 0) {
-        alpha[1] = vect2.y/vect1.y;
-        doAlpha[1] = true;
-    }
-    if (vect1.z != 0) {
-        alpha[2] = vect2.z/vect1.z;
-        doAlpha[2] = true;
-    }
 
-    bool alphaComparison = true;
-    for (int i = 0; i < 3; ++i) {
-        if (!doAlpha[i] || !doAlpha[(i + 1) % 3]) {
-            alphaComparison &= true;
-        } else {
-            alphaComparison &= isWithinError(alpha[i], alpha[(i + 1) % 3], eps, eps);
-        }
-    }
+    if ((vect1Norm.x * vect2Norm.x < -eps) ||
+        (vect1Norm.y * vect2Norm.y < -eps) ||
+        (vect1Norm.z * vect2Norm.z < -eps))
+        vect1Norm = vect1Norm * -1;
 
-    return alphaComparison;
+
+    return isWithinError(vect1Norm.x, vect2Norm.x, eps, eps) &&
+           isWithinError(vect1Norm.y, vect2Norm.y, eps, eps) &&
+           isWithinError(vect1Norm.z, vect2Norm.z, eps, eps);
+
 }
 
 bool Vector3::isSame(const Vector3 &vect1, const Vector3 &vect2, double error1, double error2) {

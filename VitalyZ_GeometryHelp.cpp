@@ -23,7 +23,7 @@ bool isSameHalfPlane(const Line &line, const Vector3 &sample_point, const Vector
         return false;
 
 
-    return Vector3::scalarProduct(dir_by_asked, dir_by_sample) >= 0;
+    return Vector3::scalarProduct(dir_by_asked, dir_by_sample) >= -eps;
 }
 
 int getMiddleIndex(const VectorsSet &vects) {
@@ -33,7 +33,7 @@ int getMiddleIndex(const VectorsSet &vects) {
     for (int i = 0; i < 3; ++i) {
         Vector3 temp_vect1 = vects[i] - vects[(i+1)%3];
         Vector3 temp_vect2 = vects[i] - vects[(i+2)%3];
-        if (Vector3::scalarProduct(temp_vect1, temp_vect2) < 0)
+        if (Vector3::scalarProduct(temp_vect1, temp_vect2) <= eps)
             return i;
     }
 
@@ -107,7 +107,7 @@ bool isSegmentsIntersect(VectorsSet segment1, VectorsSet segment2) {
 
 
 bool VitalyZ::isTrianglesIntersect(VectorsSet triangle1, VectorsSet triangle2) {
-    Plane plane1 = Plane(triangle1[0], triangle1[1], triangle2[2]);
+    Plane plane1 = Plane(triangle1[0], triangle1[1], triangle1[2]);
     Plane plane2 = Plane(triangle2[0], triangle2[1], triangle2[2]);
 
     if (Plane::isParallel(plane1, plane2)) {
@@ -127,7 +127,7 @@ bool VitalyZ::isTrianglesIntersect(VectorsSet triangle1, VectorsSet triangle2) {
     VectorsSet intersection_points1 = lineIntersectsTriangle(triangle1, intersection_line);
     VectorsSet intersection_points2 = lineIntersectsTriangle(triangle2, intersection_line);
 
-    if (intersection_points1.size() == 0 || intersection_points2.size() == 0)
+    if (intersection_points1.empty() || intersection_points2.empty())
         return false;
 
     return isSegmentsIntersect(intersection_points1, intersection_points2);

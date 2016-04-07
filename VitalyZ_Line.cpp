@@ -11,9 +11,9 @@ Line::Line(const Plane &pl1, const Plane &pl2) {
     dir_vector = Vector3::crossProduct(pl1.normal, pl2.normal);
 
     int ind1, ind2;
-    if (dir_vector.x != 0) {
+    if (!isWithinError(dir_vector.x, 0, eps, 0)) {
         ind1 = 1; ind2 = 2; base_point.x = 0;
-    } else if (dir_vector.y != 0) {
+    } else if (!isWithinError(dir_vector.y, 0, eps, 0)) {
         ind1 = 0; ind2 = 2; base_point.y = 0;
     } else {
         ind1 = 0; ind2 = 1; base_point.z = 0;
@@ -25,7 +25,7 @@ Line::Line(const Plane &pl1, const Plane &pl2) {
 
     int jind1, jind2;
 
-    jind1 = (coordpl[0][ind1] != 0) ? 0 : 1;
+    jind1 = (!isWithinError(coordpl[0][ind1], 0, eps, 0)) ? 0 : 1;
     jind2 = (jind1 + 1) % 2;
 
     coords[1] = (pl1.d*coordpl[jind2][ind1]/coordpl[jind1][ind1] - pl2.d)/
@@ -72,6 +72,7 @@ Vector3 Line::getIntersection(const Line &line1, const Line &line2) {
     } else
         from_base2_to_inter = Vector3();
 
+    
     return line2.base_point - from_base2_to_inter;
 }
 

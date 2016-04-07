@@ -2,6 +2,7 @@
 // Created by strratholm on 31.03.2016.
 //
 
+#include <iostream>
 #include "VitalyZ_Plane.h"
 #include "VitalyZ_General.h"
 
@@ -10,7 +11,7 @@ using namespace VitalyZ;
 Plane::Plane(const Vector3 &point_1, const Vector3 &point_2, const Vector3 &point_3)
         : p1(Vector3(point_1)), p2(Vector3(point_2)), p3(Vector3(point_3)) {
 
-    normal = Vector3::crossProduct(Vector3(p2 - p1),Vector3(p3 - p1));
+    normal = Vector3::crossProduct(p2 - p1, p3 - p1).normalize();
     d = -1. * Vector3::scalarProduct(p1, normal);
 
 }
