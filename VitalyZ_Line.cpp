@@ -70,25 +70,6 @@ Vector3 Line::getIntersection(const Line &line1, const Line &line2) {
                               (altitude.getMagnitude() / cos);
     }
 
-//    double x0 = line1.base_point.x;
-//    double y0 = line1.base_point.y;
-//    double z0 = line1.base_point.z;
-//    double p = line1.dir_vector.x;
-//    double q = line1.dir_vector.y;
-//    double r = line1.dir_vector.z;
-//
-//    double x1 = line2.base_point.x;
-//    double y1 = line2.base_point.y;
-//    double z1 = line2.base_point.z;
-//    double p1 = line2.dir_vector.x;
-//    double q1 = line2.dir_vector.y;
-//    double r1 = line2.dir_vector.z;
-//
-//    Vector3 res = Vector3();
-//    res.x = (x0 * q * p1 - x1 * q1 * p - y0 * p * p1 + y1 * p * p1) / (q * p1 - q1 * p);
-//    res.y = (y0 * p * q1 - y1 * p1 * q - x0 * q * q1 + x1 * q * q1) / (p * q1 - p1 * q);
-//    res.z = (z0 * q * r1 - z1 * q1 * r - y0 * r * r1 + y1 * r * r1) / (q * r1 - q1 * r);
-
     return line2.base_point - from_base2_to_inter;
 }
 
