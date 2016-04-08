@@ -5,7 +5,7 @@
 #ifndef TRIANGLES_GENERAL_H
 #define TRIANGLES_GENERAL_H
 
-#define eps 0.001
+#define eps 0.0001
 namespace VitalyZ {
 
     bool isWithinError(double x, double y, double xError, double yError);

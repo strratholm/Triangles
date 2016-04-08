@@ -27,8 +27,7 @@ bool Plane::isSame(const Plane &plane1, const Plane &plane2) {
         else if (isWithinError(plane2.d, 0, eps, eps))
             return false;
 
-        if (isWithinError(plane1.normal.getMagnitude() / plane2.normal.getMagnitude(), plane1.d / plane2.d, eps,
-                          eps))
+        if (isWithinError(plane2.d, plane1.d, eps, eps))
             return true;
     }
     return false;
